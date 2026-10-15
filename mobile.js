@@ -112,7 +112,7 @@ function boot(){
  const compareBtn=mk("button",null,actions);compareBtn.id="smsCompare";compareBtn.type="button";
  compareBtn.onpointerdown=()=>{if(loaded){compare=true;schedule()}};
  for(const ev of ["pointerup","pointerleave","pointercancel"])compareBtn.addEventListener(ev,()=>{compare=false;schedule()});
- mk("p","sms-note",null).id="smsNote";actions.after($("smsNote"));
+ const note=mk("p","sms-note",null);note.id="smsNote";actions.after(note);
  const advanced=mk("details",null,null);advanced.id="smsAdvanced";
  mk("summary",null,advanced).id="smsAdvancedTitle";main.append(advanced);
  const oldAside=document.querySelector(".app>aside");advanced.append(oldAside);
