@@ -122,7 +122,7 @@ function bind(){
  // Approximate illumination locally in-browser; source stays in client memory
  const t=document.createElement('canvas');t.width=128;t.height=58;let c=t.getContext('2d');c.filter='blur(10px)';c.drawImage(img,-16,-10,160,78);
  lightmaps[key]=t;
- alertMsg('Локально открыто фото: '+f.name+' ('+img.width+'×'+img.height+')');schedule();
+ alertMsg('Локально открыто фото: '+f.name+' ('+img.width+'×'+img.height+')');schedule();document.dispatchEvent(new CustomEvent('sms:photo-loaded',{detail:{name:f.name}}));
  }catch(err){alertMsg('Ошибка фото: '+err.message)}e.target.value='';
  };
  $('uploadTexture').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let data=await readFile(f),img=await loadImage(data);const id=$('textureFor').value;customTextures[id]={source:data,image:img};alertMsg('Образец для '+id+' загружен');schedule()}catch(err){alertMsg('Не удалось прочесть изображение')}e.target.value=''};
