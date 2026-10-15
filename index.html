@@ -157,4 +157,4 @@ function updateSupplierStatus(){const e=document.getElementById('supplierStatus'
 async function warmSupplierTextures(){updateSupplierStatus();await Promise.all(p.catalog.map(m=>sampleOfficial(m)));updateSupplierStatus();}
 
 init().catch(err=>{$('message').textContent='Ошибка инициализации: '+err.message;console.error(err)});
-</script><script src="./i18n.js" defer></script></body></html>
+</script><script src="./i18n.js" defer></script><script src="./mobile.js" defer></script></body></html>
