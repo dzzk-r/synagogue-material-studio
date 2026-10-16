@@ -19,6 +19,7 @@
 <script defer src="./data-part-10.js"></script>
 <script defer src="./data-final.js"></script>
 <script defer src="./app.js"></script>
+
 </head>
 <body>
 <header class="site-header">
@@ -57,7 +58,7 @@
     <div class="inscription-actions"><button type="button" id="moveInscription" aria-pressed="false"></button><button type="button" id="resetInscriptionPosition"></button></div>
     <p id="inscriptionHelp" class="hint"></p>
    </section>
-   <details class="advanced" id="advanced"><summary id="advancedTitle"></summary><div class="advanced-inner"><div class="control-line"><label id="opacityLabel" for="opacity"></label><input type="range" id="opacity" min="0.3" max="1" step="0.05" value="0.93"/><span id="opacityValue"></span></div><div class="control-line"><label id="lightingLabel" for="lighting"></label><input type="range" id="lighting" min="0" max="0.9" step="0.05" value="0.25"/><span id="lightingValue"></span></div><div class="light-field-controls"><button id="lightMapToggle" type="button" aria-pressed="false">View lighting map</button><button id="lightMapExport" type="button">Export light map PNG</button><p id="lightMapDescription" class="hint"></p></div><div class="control-line"><label id="scaleLabel" for="scale"></label><input type="range" id="scale" min="0.4" max="2.5" step="0.05" value="1"/><span id="scaleValue"></span></div><label class="checkline"><input type="checkbox" id="protectObjects" checked/><span id="protectLabel"></span></label><label class="checkline"><input type="checkbox" id="showMasks"/><span id="showMasksLabel"></span></label>
+   <details class="advanced" id="advanced"><summary id="advancedTitle"></summary><div class="advanced-inner"><div class="control-line"><label id="opacityLabel" for="opacity"></label><input type="range" id="opacity" min="0.3" max="1" step="0.05" value="0.93"/><span id="opacityValue"></span></div><div class="control-line"><label id="lightingLabel" for="lighting"></label><input type="range" id="lighting" min="0" max="0.9" step="0.05" value="0.25"/><span id="lightingValue"></span></div><div class="light-field-controls"><button id="lightMapToggle" type="button" aria-pressed="false">View lighting map</button><p id="lightMapDescription" class="hint"></p></div><div class="control-line"><label id="scaleLabel" for="scale"></label><input type="range" id="scale" min="0.4" max="2.5" step="0.05" value="1"/><span id="scaleValue"></span></div><label class="checkline"><input type="checkbox" id="protectObjects" checked/><span id="protectLabel"></span></label><label class="checkline"><input type="checkbox" id="showMasks"/><span id="showMasksLabel"></span></label>
     <div class="mask-edit"><h3 id="maskEditorTitle"></h3><p id="editorHelp" class="hint"></p>
     <div class="mask-selection"><label id="selectMaskLabel" for="activeMask"></label><select id="activeMask"></select></div>
     <div class="edit-tools"><select id="drawMode"><option value="view" id="drawView"></option><option value="top" id="drawTop"></option><option value="bottom" id="drawBottom"></option><option value="arkTop" id="drawArkTop"></option><option value="arkFace" id="drawArkFace"></option><option value="protect" id="drawProtected"></option></select><button type="button" id="finishPolygon"></button><button type="button" id="cancelPolygon"></button></div>
@@ -72,4 +73,185 @@
  <footer><span id="footerText"></span><a href="https://www.kalkir.co.il/" rel="noopener noreferrer" target="_blank">Kalkir ↗</a> · <a href="https://github.com/dzzk-r/synagogue-material-studio" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+/* v1.3 workspace: keep preview visible and organize tools into docked tabs.
+   Core renderer, mask editing and project serialization remain in app.js. */
+(()=>{
+'use strict';
+const categories=[
+  ['jerusalem','דמוי אבן ירושלמית','Jerusalem-style stone','https://www.kalkir.co.il/category/דמוי-אבן-ירושלמית/'],
+  ['stone','דמוי אבנים','Decorative stone','https://www.kalkir.co.il/category/דמוי-אבנים/'],
+  ['brick','דמוי בריקים','Brick','https://www.kalkir.co.il/category/דמוי-בריקים/'],
+  ['concrete','דמוי בטון ובלוק','Concrete and block','https://www.kalkir.co.il/category/דמוי-בטון-ובלוק/'],
+  ['beams','דמוי קורות עץ','Wood beams','https://www.kalkir.co.il/category/דמוי-קורות-עץ/'],
+  ['mosaic','דמוי פסיפס עץ','Wood mosaic','https://www.kalkir.co.il/category/דמוי-פסיפס-עץ/'],
+  ['slats','דמוי רצועות עץ','Wood slats','https://www.kalkir.co.il/category/דמוי-רצועות-עץ/']
+];
+const externalExamples={
+ stone:[
+  {he:'גלילית לבן',dimensions:'120 × 86.5 cm',coverage_m2:0.95,weight_kg:5,url:'https://www.kalkir.co.il/products/גלילית-לבן/',photo:'https://www.kalkir.co.il/wp-content/uploads/2023/06/glilit4.jpg.jpg'},
+  {he:'גלילית אפור',dimensions:'120 × 86.5 cm',coverage_m2:0.95,weight_kg:5,url:'https://www.kalkir.co.il/products/גלילית-אפור/',photo:'https://www.kalkir.co.il/wp-content/uploads/2023/04/גלילית-אפור-2.jpg'},
+  {he:'סלייט A',dimensions:'115 × 78 cm',coverage_m2:0.85,weight_kg:4.5,url:'https://www.kalkir.co.il/products/סלייט-a/',photo:'https://www.kalkir.co.il/wp-content/uploads/2023/04/דמו-אבנים-סלייט-A-1.jpg'},
+  {he:'אבן פרא מותאם',dimensions:'114 × 80 cm',coverage_m2:0.86,weight_kg:4.5,url:'https://www.kalkir.co.il/products/אבן-פרא-מותאם/',photo:'https://www.kalkir.co.il/wp-content/uploads/2023/06/פרא-מותאם-9.jpg'}
+ ],
+ brick:[{he:'ורונה מותאם',dimensions:'109 × 71 cm',coverage_m2:0.73,weight_kg:4,url:'https://www.kalkir.co.il/products/ורונה-מותאם/',photo:'https://www.kalkir.co.il/wp-content/uploads/2023/06/ורונה-מותאם-5.jpg'}]
+};
+const LANG={
+ he:{scene:'תמונה',materials:'חומרים',lighting:'תאורה',masks:'מסכות',layers:'שכבות',inscription:'כתובת',project:'פרויקט',before:'צילום מקור',light:'מפת תאורה',source:'ספק',collection:'קולקציה',model:'דגם',supplier:'קל קיר · Kalkir',more:'כל הקולקציות של הספק',linked:'קישורים ישירים לקטלוג',compatible:'10 דגמים זמינים להדמיה בקטגוריה זו',external:'קטגוריות נוספות: קישור לקטלוג היצרן; דגמים טרם שולבו בהדמיה.',selectZone:'לאיזה אזור להחיל?',chooseModel:'בחרו דגם מהקטלוג',originalLayers:'שכבות מהצילום המקורי',curtain:'וילון / פרוכת',furniture:'רהיטים ופריטים בקדמת התמונה',fixtures:'גופי תאורה ועיטורים',protected:'שימור מסכות מגן',notIsolated:'חשוב: פריטים אלה עדיין חלק מהצילום המקורי. כיבוי שכבת הגנה אינו מוחק את הפריט. להסרה מלאה נדרש רקע משוחזר ושכבה נפרדת.',view:'תצוגה והגדרות',masksHint:'בחירת מסכה וגרירת נקודות משנים את התוצאה בתמונה הנראית כל הזמן.',lamp:'השוואה מיידית לצילום המקורי ולמפת התאורה',save:'ייצוא / ייבוא',integrated:'משולב בהדמיה',catalogLink:'דף המוצר הרשמי ↗',openAll:'כל הדגמים למטה ↘',workspace:'חלל העבודה',lightingNote:'מפת התאורה היא הערכה בלבד מצילום, לא מדידת אור. שינוי המיקום והמסכה מעדכן את המפה.',wall:'החלק העליון',lower:'החלק התחתון',face:'חזית ארון',head:'כותרת ארון',supplierSoon:'ספקים נוספים — ניתן להוסיף בעתיד',inspector:'השוואת שכבות',photo:'תמונה מקורית',map:'בהירות משוערת'},
+ en:{scene:'Scene',materials:'Materials',lighting:'Lighting',masks:'Masks',layers:'Layers',inscription:'Text',project:'Project',before:'Original photograph',light:'Lighting field',source:'Supplier',collection:'Collection',model:'Model',supplier:'Kalkir · קל קיר',more:'All supplier collections',linked:'Catalog source links',compatible:'10 models available for visualization in this category',external:'Other categories link to the supplier catalog; their models are not yet integrated for rendering.',selectZone:'Apply material to zone',chooseModel:'Choose catalog model',originalLayers:'Objects in the original photo',curtain:'Curtain / parochet',furniture:'Furniture & foreground',fixtures:'Fixtures & ornaments',protected:'Protected mask overlays',notIsolated:'Important: these objects are still baked into the original photograph. Turning an overlay off does not remove the object. True removal requires reconstructed background and isolated object layers.',view:'Preview adjustments',masksHint:'Select a mask and drag its handles; the main image stays visible throughout editing.',lamp:'Compare the source photograph and estimated lighting map',save:'Import / export',integrated:'Integrated for preview',catalogLink:'Official product page ↗',openAll:'Browse full catalog below ↘',workspace:'Workspace',lightingNote:'Lighting field is estimated from the photo, not measured illumination. Edits to wall masks recompute it.',wall:'Upper wall',lower:'Lower wall',face:'Ark face',head:'Ark frieze',supplierSoon:'Additional suppliers can be added later',inspector:'Layer comparison',photo:'Original image',map:'Estimated brightness'},
+ ru:{scene:'Сцена',materials:'Материалы',lighting:'Свет',masks:'Маски',layers:'Слои',inscription:'Надпись',project:'Проект',before:'Оригинал',light:'Карта света',source:'Поставщик',collection:'Коллекция',model:'Модель',supplier:'Kalkir · קל קיר',more:'Все коллекции поставщика',linked:'Ссылки на разделы каталога',compatible:'10 моделей интегрировано для визуализации',external:'Остальные разделы открываются на сайте поставщика: их товары пока не интегрированы в рендер.',selectZone:'Зона для применения модели',chooseModel:'Выберите модель',originalLayers:'Объекты исходной фотографии',curtain:'Завеса / парохет',furniture:'Мебель и передний план',fixtures:'Светильники и декор',protected:'Сохранять защитные маски',notIsolated:'Важно: предметы ещё являются частью оригинального снимка. Отключение защиты не удаляет предметы; для этого нужен восстановленный фон и отдельные слои объектов.',view:'Параметры изображения',masksHint:'Выберите маску и двигайте вершины — изображение всё время остаётся перед глазами.',lamp:'Сравнение с оригиналом и картой освещённости',save:'Импорт / экспорт',integrated:'Для визуализации',catalogLink:'Карточка товара ↗',openAll:'Полный каталог ниже ↘',workspace:'Рабочая область',lightingNote:'Карта света рассчитана приблизительно из фотографии. При изменении масок карта пересчитывается.',wall:'Верх стены',lower:'Низ стены',face:'Фасад арон-кодеша',head:'Фриз арон-кодеша',supplierSoon:'Другие поставщики — в следующих версиях',inspector:'Сравнение слоёв',photo:'Исходное фото',map:'Расчётная яркость'}
+};
+let tab='materials';
+const el=(tag,cl='',parent=null)=>{const x=document.createElement(tag);if(cl)x.className=cl;if(parent)parent.append(x);return x};
+const labels=()=>LANG[document.documentElement.lang]||LANG.he;
+const items={};
+let tabs=null,photoThumb=null,lightThumb=null,zoneSelect=null,modelSelect=null,supplierSelect=null,catSelect=null,quickCard=null,collectionLinks=null,layerExplain=null;
+let layerState={curtain:true,furniture:true,fixtures:true};
+function onReady(){
+ if(!document.querySelector('.controls')||!document.querySelector('#advanced')||!window.SMS_DATA){requestAnimationFrame(onReady);return;}
+ const controls=document.querySelector('.controls'),old=[...controls.children];
+ const dock=el('section','sms-dock');controls.prepend(dock);
+ tabs=el('nav','sms-tabs',dock);tabs.setAttribute('aria-label','Editor panels');
+ const paneArea=el('div','sms-tab-content',dock);
+ for(const name of ['scene','materials','lighting','masks','layers','inscription','project']) {const b=el('button','sms-tab',tabs);b.type='button';b.dataset.tab=name;b.onclick=()=>activateTab(name);const p=el('section','sms-pane',paneArea);p.dataset.pane=name;items[name]=p;}
+ // Move existing instrument panels. Their original listeners and ids are preserved.
+ items.scene.append(old[0],old[1]);items.materials.append(old[2]);items.inscription.append(old[3]);
+ const advanced=document.getElementById('advanced'),inner=advanced.querySelector('.advanced-inner');
+ items.masks.append(advanced);advanced.open=false;
+ const getLine=id=>document.getElementById(id)?.closest('.control-line');
+ const box=el('section','sms-settings',items.lighting);for(const id of ['opacity','lighting','scale']) {const l=getLine(id);if(l)box.append(l)}
+ const light=document.querySelector('.light-field-controls');if(light)box.append(light);
+ const layers=items.layers;
+ const checks=el('div','sms-layer-tools',layers);let objects=el('div','sms-layer-objects',checks);
+ for(const [key,label] of [['curtain','curtain'],['furniture','furniture'],['fixtures','fixtures']]){
+   const line=el('label','sms-layer-toggle',objects),input=el('input','',line);input.type='checkbox';input.checked=true;input.dataset.objectLayer=key;
+   input.disabled=true;input.title='Not independently isolated yet';const sp=el('span','',line);sp.dataset.layerName=label;
+ }
+ const originalProtect=document.getElementById('protectObjects')?.closest('label');if(originalProtect)layers.append(originalProtect);
+ const maskOutline=document.getElementById('showMasks')?.closest('label');if(maskOutline)advanced.querySelector('.mask-edit')?.before(maskOutline);
+ layerExplain=el('p','sms-caution',layers);
+ const saving=inner.querySelector('.save-actions');if(saving)items.project.append(saving);
+ // Source hierarchy: supplier → category → model, with persistent full catalog links.
+ const materialPane=items.materials,section=el('div','sms-supplier-browser',null);materialPane.prepend(section);
+ const srcRow=el('div','sms-source-pickers',section);
+ const wrapSelect=(id,key,parent)=>{const wrap=el('label','sms-source-field',parent);const span=el('span','',wrap);span.dataset.sourceLabel=key;const select=el('select','',wrap);select.id=id;return select};
+ supplierSelect=wrapSelect('smsSupplier','source',srcRow);let option=new Option('Kalkir · קל קיר','kalkir');supplierSelect.add(option);supplierSelect.value='kalkir';supplierSelect.disabled=true;
+ catSelect=wrapSelect('smsCategory','collection',srcRow);
+ for(const [id,he,en] of categories)catSelect.add(new Option(he+' / '+en,id));catSelect.value='jerusalem';
+ catSelect.onchange=()=>{renderCollectionLinks();renderGallery();};
+ const firstInfo=el('p','sms-note',section);firstInfo.id='smsCategoryStatus';
+ collectionLinks=el('div','sms-collection-links',section);
+ const choose=el('div','sms-source-pickers',section);zoneSelect=wrapSelect('smsMaterialZone','selectZone',choose);modelSelect=wrapSelect('smsMaterialModel','chooseModel',choose);
+ for(const [id,key] of [['top','wall'],['bottom','lower'],['arkTop','head'],['arkFace','face']])zoneSelect.add(new Option('',id));
+ modelSelect.onchange=()=>{const group=zoneSelect.value;state.materials[group]=modelSelect.value;renderProduct();scheduleDraw();renderGallery()};
+ zoneSelect.onchange=()=>{refreshPicker();renderGallery()};
+ const galleryHead=el('h3','sms-gallery-title',section);galleryHead.id='smsGalleryTitle';
+ const gallery=el('div','sms-gallery',section);gallery.id='smsGallery';
+ const full=document.createElement('a');full.className='sms-show-all';full.href='#catalogSection';full.id='smsAllModels';section.append(full);
+ // Layers preview: two smaller factual diagnostic views occupy the visual area under the main canvas.
+ const card=document.querySelector('.view-card');const inspector=el('section','sms-inspector',null);card.append(inspector);
+ const header=el('h3','',inspector);header.id='smsInspectorTitle';
+ const two=el('div','sms-preview-grid',inspector);
+ for(const [id,label] of [['smsBeforeThumb','photo'],['smsLightThumb','map']]) {const container=el('div','sms-diagnostic',two);const caption=el('span','',container);caption.dataset.diagnostic=label;const can=el('canvas','',container);can.id=id;can.width=320;can.height=180}
+ photoThumb=document.getElementById('smsBeforeThumb');lightThumb=document.getElementById('smsLightThumb');
+ const note=el('p','sms-inspector-note',inspector);note.id='smsInspectorNote';
+ const style=el('style','',document.head);style.textContent=`
+ @media(min-width:1000px){.view-card{position:sticky;top:12px;max-height:calc(100dvh - 24px);overflow:auto}.workspace{grid-template-columns:minmax(0,1fr) minmax(390px,440px);align-items:start}html[dir=rtl] .workspace{grid-template-columns:minmax(390px,440px) minmax(0,1fr)}.controls,html[dir=rtl] .controls{width:100%;max-height:calc(100dvh - 24px);overflow:hidden}.sms-dock{display:flex;flex-direction:column;height:calc(100dvh - 24px)}}
+ @media(max-width:999px){.view-card{position:relative}.sms-dock{display:flex;flex-direction:column;min-height:400px}.sms-tabs{position:sticky;top:0;z-index:4;background:#1a2b39}.sms-tab-content{max-height:none!important;overflow:visible!important}}
+ .controls{display:block!important}.sms-dock{background:#1b2936;border:1px solid #385064;border-radius:16px;overflow:hidden}
+ .sms-tabs{display:flex;gap:3px;padding:10px 8px;border-bottom:1px solid #385064;overflow-x:auto;flex:none;scrollbar-width:thin}
+ .sms-tab{font-size:12px;white-space:nowrap;padding:10px 12px;flex:none;border-radius:8px}.sms-tab[aria-selected=true]{background:#f0ce8f;color:#182832;font-weight:750}
+ .sms-tab-content{flex:1;overflow-y:auto;min-height:0;overscroll-behavior:contain}.sms-pane{padding:13px;display:none}.sms-pane.active{display:block}
+ .sms-pane>.panel{margin-bottom:12px}.sms-pane>.advanced{border:none;background:transparent}.sms-pane>.advanced summary{display:none!important}.sms-pane>.advanced-inner{padding:0}.sms-pane .mask-edit{border:0;margin:0;padding:0}
+ .sms-supplier-browser{border:1px solid #52647a;padding:13px;border-radius:12px;background:#1b3040;margin-bottom:14px}
+ .sms-source-pickers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+ .sms-source-field{display:flex;min-width:0;flex-direction:column;gap:5px;font-size:12px;color:#c7d5db}
+ .sms-source-field select{width:100%;font-size:12px;padding:10px 7px}.sms-source-field select:disabled{opacity:.9}
+ .sms-collection-links{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0 13px}
+ .sms-collection-links a{font-size:11px;padding:7px 9px;border:1px solid #516779;border-radius:7px;color:#dfe9ef;text-decoration:none}
+ .sms-collection-links a.selected{color:#1c2a34;background:#f0ce8f;border-color:#f0ce8f}
+ .sms-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .sms-gallery-item{border:1px solid #496174;border-radius:9px;overflow:hidden;background:#20313e;min-width:0;padding:0;display:block;text-align:start}
+ .sms-gallery-item.selected{border-color:#f0ce8f;outline:1px solid #f0ce8f}
+ .sms-gallery-item img{display:block;width:100%;height:76px;object-fit:cover}
+ .sms-gallery-item span{font-size:11px;display:block;padding:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .sms-gallery-item small{font-size:10px;color:#bcd0db;padding:0 7px 8px;display:block}
+ .sms-show-all{display:block;font-size:12px;margin-top:12px}.sms-note,.sms-caution{font-size:12px;color:#b8c7cf;line-height:1.6}
+ .sms-caution{border-inline-start:3px solid #f0ce8f;background:#253541;padding:12px;border-radius:6px}
+ .sms-layer-toggle{display:flex;align-items:center;gap:8px;padding:9px;border-bottom:1px solid #35485a;cursor:pointer}.sms-layer-toggle input{width:16px;height:16px}
+ .sms-layer-toggle span{font-size:13px}
+ .sms-inspector{border-top:1px solid #385064;margin-top:14px;padding-top:10px}.sms-inspector h3{font-size:12px;font-weight:650;margin:2px 0 9px}
+ .sms-preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.sms-diagnostic{border:1px solid #40566b;padding:8px;border-radius:9px;min-width:0}
+ .sms-diagnostic span{font-size:11px;color:#bdcbd3;display:block;margin-bottom:6px}.sms-diagnostic canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#253543;border-radius:6px}
+ .sms-inspector-note{font-size:11px;color:#a9bcc8;margin-bottom:0}
+ @media(max-width:500px){.sms-source-pickers{grid-template-columns:1fr}.sms-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+ `;
+ // Use existing core renderer and light extractor for factual miniatures, without rendering new synthetic content.
+ const originalRender=renderNow;
+ renderNow=function(){originalRender();drawDiagnosticThumbs();};
+ // Must only edit a mask while the Masks tab is active.
+ activateTab('materials');
+ const originalSetLanguage=setLanguage;
+ setLanguage=function(code){originalSetLanguage(code);localizeWorkspace()};
+ const originalRefresh=refreshStatus;
+ refreshStatus=function(){originalRefresh();refreshPicker();};
+ localizeWorkspace();refreshPicker();renderCollectionLinks();renderGallery();scheduleDraw();
+}
+function activateTab(name){
+ tab=name;
+ for(const node of document.querySelectorAll('.sms-tab')) {const active=node.dataset.tab===name;node.setAttribute('aria-selected',String(active));node.tabIndex=active?0:-1;}
+ for(const pane of document.querySelectorAll('.sms-pane'))pane.classList.toggle('active',pane.dataset.pane===name);
+ const advanced=document.getElementById('advanced');advanced.open=name==='masks';
+ if(name!=='masks'){state.showMasks=false;document.getElementById('showMasks').checked=false;state.selectedMask=null;state.drawMode='view';document.getElementById('drawMode').value='view'}
+ if(name==='masks'){state.showMasks=true;document.getElementById('showMasks').checked=true}
+ refreshMaskEditing();scheduleDraw();
+}
+function localizeWorkspace(){
+ const t=labels();for(const btn of document.querySelectorAll('.sms-tab'))btn.textContent=t[btn.dataset.tab];
+ document.querySelectorAll('[data-source-label]').forEach(e=>e.textContent=t[e.dataset.sourceLabel]);
+ document.querySelectorAll('[data-layer-name]').forEach(e=>e.textContent=t[e.dataset.layerName]);
+ document.querySelectorAll('[data-diagnostic]').forEach(e=>e.textContent=t[e.dataset.diagnostic]);
+ document.getElementById('smsGalleryTitle').textContent=t.chooseModel;
+ document.getElementById('smsAllModels').textContent=t.openAll;
+ document.getElementById('smsInspectorTitle').textContent=t.inspector;
+ document.getElementById('smsInspectorNote').textContent=t.lightingNote;
+ document.getElementById('smsCategoryStatus').textContent=catSelect.value==='jerusalem'?t.compatible:t.external;
+ const sl=supplierSelect.options[0];sl.textContent=t.supplier;
+ for(const opt of zoneSelect.options) opt.textContent=t[opt.value==='top'?'wall':opt.value==='bottom'?'lower':opt.value==='arkTop'?'head':'face'];
+ setLayerSupport();renderCollectionLinks();
+}
+function setLayerSupport(){
+ layerExplain.textContent=labels().notIsolated;
+ for(const inp of document.querySelectorAll('[data-object-layer]')){
+   // This checkbox controls protection/restoration of an original patch, not genuine object removal.
+   inp.title=labels().notIsolated;
+ }
+}
+function refreshPicker(){
+ if(!zoneSelect)return;
+ const enabled=groupNames();if(enabled.length&&!enabled.includes(zoneSelect.value))zoneSelect.value=enabled[0];
+ const val=zoneSelect.value||'top';modelSelect.replaceChildren();for(const m of catalog)modelSelect.add(new Option(m.he,m.id));
+ modelSelect.value=state.materials[val]||catalog[0]?.id||'yerushalmi';
+ document.getElementById('smsCategoryStatus').textContent=catSelect.value==='jerusalem'?labels().compatible:labels().external;
+}
+function renderCollectionLinks(){
+ if(!collectionLinks)return;collectionLinks.replaceChildren();for(const [key,he,en,url] of categories){const a=el('a','',collectionLinks);a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=(document.documentElement.lang==='he'?he:en)+' ↗';a.classList.toggle('selected',key===catSelect.value);a.title=url;}
+}
+function renderGallery(){
+ const gallery=document.getElementById('smsGallery');if(!gallery)return;gallery.replaceChildren();
+ // These 10 linked models are sourced from the supplier's Jerusalem stone category.
+ if(catSelect.value!=='jerusalem' && !(externalExamples[catSelect.value]||[]).length)return;
+ const selected=state.materials[zoneSelect.value];for(const m of (catSelect.value==='jerusalem'?catalog:(externalExamples[catSelect.value]||[]))){const card=el('button','sms-gallery-item',gallery);card.type='button';card.classList.toggle('selected',selected===m.id);card.title=m.he+' / '+m.url;const im=el('img','',card);im.loading='lazy';im.referrerPolicy='no-referrer';im.alt=m.he;im.src=m.texturePath||m.photo;const originalPhoto=new Image();originalPhoto.onload=()=>{if(im.isConnected)im.src=m.photo};originalPhoto.src=m.photo;const name=el('span','',card);name.textContent=m.he;const meta=el('small','',card);meta.textContent=(m.coverage_m2||'?')+' m² · '+(m.dimensions||'');card.onclick=()=>{if(m.id){modelSelect.value=m.id;modelSelect.dispatchEvent(new Event('change'))}else window.open(m.url,'_blank','noopener,noreferrer')};}
+}
+function drawDiagnosticThumbs(){
+ if(!photoThumb||!lightThumb||typeof photo!=='function')return;
+ const original=photo(),p=current(),a=photoThumb.getContext('2d'),b=lightThumb.getContext('2d');
+ a.clearRect(0,0,photoThumb.width,photoThumb.height);b.clearRect(0,0,lightThumb.width,lightThumb.height);
+ if(original) a.drawImage(original,0,0,photoThumb.width,photoThumb.height);
+ const map=getLightMap();if(map)b.drawImage(map,0,0,lightThumb.width,lightThumb.height);
+}
+onReady();
+})();
+
+</script>
 </body></html>
