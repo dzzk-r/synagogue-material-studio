@@ -144,7 +144,7 @@ function onReady(){
  const choose=el('div','sms-source-pickers',section);zoneSelect=wrapSelect('smsMaterialZone','selectZone',choose);modelSelect=wrapSelect('smsMaterialModel','chooseModel',choose);
  for(const [id,key] of [['top','wall'],['bottom','lower'],['arkTop','head'],['arkFace','face']])zoneSelect.add(new Option('',id));
  modelSelect.onchange=()=>{const group=zoneSelect.value;state.materials[group]=modelSelect.value;renderProduct();scheduleDraw();renderGallery()};
- zoneSelect.onchange=()=>{refreshPicker();renderGallery()};
+ zoneSelect.onchange=()=>{const chosen=zoneSelect.value;if(!groupNames().includes(chosen)){state.scenario=chosen==='top'?'upper':chosen==='bottom'?'lower':'ark';renderControls()}zoneSelect.value=chosen;refreshPicker();renderGallery();scheduleDraw()};
  const galleryHead=el('h3','sms-gallery-title',section);galleryHead.id='smsGalleryTitle';
  const gallery=el('div','sms-gallery',section);gallery.id='smsGallery';
  const full=document.createElement('a');full.className='sms-show-all';full.href='#catalogSection';full.id='smsAllModels';section.append(full);
@@ -195,6 +195,8 @@ function onReady(){
  setLanguage=function(code){originalSetLanguage(code);localizeWorkspace()};
  const originalRefresh=refreshStatus;
  refreshStatus=function(){originalRefresh();refreshPicker();};
+ const originalRenderControls=renderControls;
+ renderControls=function(){originalRenderControls();if(!zoneSelect)return;const enabled=groupNames();if(enabled.length&&!enabled.includes(zoneSelect.value))zoneSelect.value=enabled[0];refreshPicker();renderGallery()};
  localizeWorkspace();refreshPicker();renderCollectionLinks();renderGallery();scheduleDraw();
 }
 function activateTab(name){
@@ -229,7 +231,6 @@ function setLayerSupport(){
 }
 function refreshPicker(){
  if(!zoneSelect)return;
- const enabled=groupNames();if(enabled.length&&!enabled.includes(zoneSelect.value))zoneSelect.value=enabled[0];
  const val=zoneSelect.value||'top';modelSelect.replaceChildren();for(const m of catalog)modelSelect.add(new Option(m.he,m.id));
  modelSelect.value=state.materials[val]||catalog[0]?.id||'yerushalmi';
  document.getElementById('smsCategoryStatus').textContent=catSelect.value==='jerusalem'?labels().compatible:labels().external;
@@ -241,7 +242,7 @@ function renderGallery(){
  const gallery=document.getElementById('smsGallery');if(!gallery)return;gallery.replaceChildren();
  // These 10 linked models are sourced from the supplier's Jerusalem stone category.
  if(catSelect.value!=='jerusalem' && !(externalExamples[catSelect.value]||[]).length)return;
- const selected=state.materials[zoneSelect.value];for(const m of (catSelect.value==='jerusalem'?catalog:(externalExamples[catSelect.value]||[]))){const card=el('button','sms-gallery-item',gallery);card.type='button';card.classList.toggle('selected',selected===m.id);card.title=m.he+' / '+m.url;const im=el('img','',card);im.loading='lazy';im.referrerPolicy='no-referrer';im.alt=m.he;im.src=m.texturePath||m.photo;const originalPhoto=new Image();originalPhoto.onload=()=>{if(im.isConnected)im.src=m.photo};originalPhoto.src=m.photo;const name=el('span','',card);name.textContent=m.he;const meta=el('small','',card);meta.textContent=(m.coverage_m2||'?')+' m² · '+(m.dimensions||'');card.onclick=()=>{if(m.id){modelSelect.value=m.id;modelSelect.dispatchEvent(new Event('change'))}else window.open(m.url,'_blank','noopener,noreferrer')};}
+ const selected=state.materials[zoneSelect.value];for(const m of (catSelect.value==='jerusalem'?catalog:(externalExamples[catSelect.value]||[]))){const card=el('button','sms-gallery-item',gallery);card.type='button';card.classList.toggle('selected',selected===m.id);card.title=m.he+' / '+m.url;const im=el('img','',card);im.loading='lazy';im.referrerPolicy='no-referrer';im.alt=m.he;im.src=m.texturePath||m.photo;const originalPhoto=new Image();originalPhoto.onload=()=>{if(im.isConnected)im.src=m.photo};originalPhoto.src=m.photo;const name=el('span','',card);name.textContent=m.he;const meta=el('small','',card);meta.textContent=(m.coverage_m2||'?')+' m² · '+(m.dimensions||'');card.onclick=()=>{if(catalog.some(product=>product.id===m.id)){modelSelect.value=m.id;modelSelect.dispatchEvent(new Event('change'))}else window.open(m.url,'_blank','noopener,noreferrer')};}
 }
 function drawDiagnosticThumbs(){
  if(!photoThumb||!lightThumb||typeof photo!=='function')return;
