@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content="סימולטור חיפוי קירות לבית הכנסת על פי דגמי Kalkir" />
-<title>Synagogue Material Studio v1.3.4 · Material Color Grading</title>
+<title>Synagogue Material Studio v1.3.5 · Jerusalem Stone Preset</title>
 <style>
 :root{--page:#101923;--panel:#1b2936;--panel2:#223343;--line:#385064;--text:#f4f4f0;--muted:#aebfc9;--gold:#f0ce8f;--blue:#83bbf0;--green:#a7cfa5;--red:#dd9fa2}
 *{box-sizing:border-box}html{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}body{margin:0;color:var(--text);background:var(--page);font-size:14px}button,select,input{font:inherit}button{border:1px solid #476075;background:#2b3f50;color:var(--text);padding:11px 14px;border-radius:10px;cursor:pointer}button:hover{background:#40566a}button:disabled{opacity:.45;cursor:not-allowed}button.primary{background:var(--gold);color:#192833;font-weight:750;border-color:var(--gold)}button.secondary{background:#263c4c}button.ghost{background:#182938;border-color:#536d80}button.selected{background:#405b6c;border-color:#f5d99d;color:#f9e2b8}select,input[type=text]{padding:11px 13px;color:var(--text);background:#111f2b;border:1px solid #4a6374;border-radius:9px;width:100%;min-width:0}select:focus,button:focus-visible,input:focus-visible{outline:2px solid var(--gold)}a{color:#f6d697;text-underline-offset:3px}button,input[type=checkbox],input[type=range]{accent-color:var(--gold)}.site-header{border-bottom:1px solid #344653;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px max(18px,calc((100vw - 1240px)/2));flex-wrap:wrap;background:#17232d}.brand{display:flex;align-items:center;gap:12px}.brand-symbol{border:1px solid #587b8d;background:#283d4d;border-radius:10px;font-size:29px;width:47px;height:47px;display:grid;place-items:center}.brand strong{display:block;font-size:17px;letter-spacing:-.3px;direction:ltr;text-align:start}.brand small{display:block;color:var(--muted);font-size:12px}.languages{display:flex;gap:6px;align-items:center}.languages button{min-width:72px;font-size:13px;padding:9px 10px}.languages button[aria-pressed=true]{background:var(--gold);color:#17232c;font-weight:750;border-color:var(--gold)}.container{max-width:1260px;margin:auto;padding:20px 18px}.hero{margin-bottom:16px}.eyebrow{font-size:12px;color:var(--gold);font-weight:700}.hero h1{font-size:clamp(23px,3.5vw,33px);margin:7px 0}.hero p{margin:4px 0 0;color:var(--muted);font-size:14px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(310px,360px);gap:18px;align-items:start}html[dir=rtl] .workspace{grid-template-columns:minmax(310px,360px) minmax(0,1fr)}html[dir=rtl] .view-card{grid-column:2;grid-row:1}html[dir=rtl] .controls{grid-column:1;grid-row:1}.view-card,.panel,.advanced,.catalog-section{border:1px solid var(--line);background:var(--panel);border-radius:16px}.view-card{padding:13px;min-width:0}.card-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}.card-heading strong{font-size:16px}.chip{font-size:11px;border:1px solid #5d7482;color:#b8cbd7;border-radius:50px;padding:5px 8px}.scene-stage{border:1px solid #41586a;border-radius:12px;overflow:hidden;position:relative;background:#203545}.scene-stage canvas{display:block;width:100%;height:auto;touch-action:pan-y}.empty-scene{min-height:270px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:25px;text-align:center;background:radial-gradient(circle at 50% 0,#36566c,#1b2b39 70%)}.empty-scene[hidden]{display:none}.empty-icon{font-size:40px;background:#325267;border-radius:13px;padding:8px 18px}.empty-scene p{color:var(--muted);line-height:1.45;max-width:400px}.preview-actions{display:flex;gap:9px;margin-top:12px}.preview-actions button{flex:1;min-height:47px}.accuracy,.hint{color:var(--muted);font-size:12px;line-height:1.55}.accuracy{margin:12px 3px 0}.controls{display:flex;flex-direction:column;gap:14px}.panel{padding:17px}.panel h2{font-size:16px;display:flex;align-items:center;gap:10px;margin:0 0 14px}.step{color:var(--gold);border:1px solid #8e805f;border-radius:8px;padding:3px 7px;font-size:12px}.field-label{font-size:12px;font-weight:600;display:block;color:#c9d5dc;margin-bottom:7px}.panel select{font-size:13px}.hint{margin:9px 0}.profile-photo{margin-top:14px}.photo-buttons{display:flex;gap:8px}.photo-buttons button{flex:1;padding:10px 7px;font-size:12px}.scenario-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.scenario-grid button{min-height:50px;padding:9px 4px;font-size:12px;line-height:1.3}.material-field{margin:0 0 12px}.material-field label{display:block;font-size:12px;color:#c9d8de;margin-bottom:6px}.product-card{display:flex;gap:12px;align-items:start;border:1px solid #475d6a;background:#152531;border-radius:10px;padding:10px;margin-top:11px;min-height:112px}.product-card img{width:107px;height:92px;object-fit:cover;background:#394c59;border-radius:8px}.product-card .info{flex:1;font-size:12px;line-height:1.5}.product-card b{display:block;font-size:15px;color:#f9deaa}.product-card small{font-size:10px;color:#a8bfcb;display:block;margin:4px 0}.advanced>summary,.catalog-section>summary{cursor:pointer;padding:17px;font-weight:700;list-style-position:inside}.advanced-inner{padding:0 16px 16px}.control-line{display:grid;grid-template-columns:1fr 1fr 44px;gap:8px;align-items:center;margin:10px 0}.control-line label{font-size:12px}.control-line input[type=range]{width:100%}.control-line>span{font-size:12px;color:var(--muted)}.checkline{display:flex;gap:9px;align-items:center;font-size:13px;margin:12px 0}.mask-edit{border-top:1px solid var(--line);margin-top:15px;padding-top:12px}.mask-edit h3{font-size:14px}.edit-tools{display:flex;gap:7px;flex-wrap:wrap}.edit-tools select{flex:2 1 155px}.edit-tools button{flex:1 1 90px;font-size:12px}.mask-list{max-height:200px;overflow:auto;margin-top:9px}.mask-item{display:flex;align-items:center;gap:7px;border-bottom:1px solid #33495a;padding:5px 0;font-size:11px}.mask-item span{flex:1}.mask-item button{padding:3px 8px;font-size:11px}.save-actions{display:flex;gap:8px;margin-top:14px}.save-actions button{flex:1;font-size:12px}.catalog-section{margin-top:19px}.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:12px;padding:0 16px 16px}.cat-item{background:#182938;border:1px solid #385369;border-radius:10px;padding:12px}.cat-item img{width:100%;height:100px;object-fit:cover;background:#263947;border-radius:8px}.cat-item b{display:block;margin:7px 0;font-size:14px}.cat-item p{margin:5px 0;color:var(--muted);font-size:12px}.cat-item a{font-size:12px}footer{margin:20px 0 15px;border-top:1px solid var(--line);padding-top:13px;color:var(--muted);font-size:12px;line-height:1.65}.error-box{background:#4b2730;padding:13px;margin:8px 0;border:1px solid #aa5364;border-radius:10px}.error-box[hidden]{display:none}.toast{position:fixed;bottom:15px;inset-inline:15px;margin:auto;width:fit-content;max-width:95vw;padding:10px 16px;border-radius:9px;background:#d9c391;color:#17222c;box-shadow:0 8px 20px #0008;opacity:0;pointer-events:none;transition:opacity .3s}.toast.visible{opacity:1}
@@ -608,23 +608,29 @@ start();
 </script>
 
 <script>
-/* SMS v1.3.4 · Non-destructive, zone + material specific color grading.
+/* SMS v1.3.5 · Jerusalem-style stone color preset, with per-zone/model user overrides.
+   The recommended default is an aesthetic starting point, not supplier colorimetric calibration.
+   Non-destructive, zone + material specific color grading.
    Each source texel is sRGB decoded to linear RGB before EV, WB, and saturation.
    Values are applied before lighting and homography to both render paths. */
 (()=>{'use strict';
  const ZONES=['top','bottom','arkTop','arkFace'];
  const LABEL={
- en:{title:'Material color grading',subtitle:'Controls change the selected material in this zone only. Lighting and original photograph stay unchanged.',ev:'Exposure',temperature:'Temperature',saturation:'Saturation',reset:'Reset grade',cool:'Cooler',warm:'Warmer',note:'Creative preview correction (not color-calibrated). EV is measured in stops.'},
- he:{title:'תיקון צבע חומר',subtitle:'משפיע רק על הדגם באזור הנבחר. התאורה והתמונה המקורית לא משתנות.',ev:'חשיפה',temperature:'טמפרטורת צבע',saturation:'רוויה',reset:'איפוס צבע',cool:'קר',warm:'חם',note:'תיקון תצוגה, לא כיול מדויק. ערך החשיפה ביחידות EV.'},
- ru:{title:'Цветокоррекция материала',subtitle:'Только выбранная модель в этой зоне. Исходное фото и освещение не изменяются.',ev:'Экспозиция',temperature:'Температура',saturation:'Насыщенность',reset:'Сбросить',cool:'Холоднее',warm:'Теплее',note:'Настройка предпросмотра, не колориметрическая калибровка. EV измеряется в ступенях.'}
+ en:{title:'Material color grading',subtitle:'Jerusalem stone starts at −0.5 EV, Temperature −20, Saturation 90%. Other collections stay neutral. Each zone and model can be adjusted.',ev:'Exposure',temperature:'Temperature',saturation:'Saturation',reset:'Restore suggested preset',neutral:'Neutral · 0 EV',cool:'Cooler',warm:'Warmer',note:'Suggested visual preset, not an accurate measurement of Kalkir panel colors. Imported older projects retain their neutral appearance.'},
+ he:{title:'תיקון צבע חומר',subtitle:'לאבן ירושלמית נקודת התחלה: ‎−0.5 EV, טמפרטורה ‎−20, רוויה 90%. הקולקציות האחרות נשארות ניטרליות. ניתן לשנות כל דגם ואזור.',ev:'חשיפה',temperature:'טמפרטורת צבע',saturation:'רוויה',reset:'שחזור הגדרות מומלצות',neutral:'ניטרלי · 0 EV',cool:'קר',warm:'חם',note:'המלצת תצוגה בלבד, לא מדידת צבע של לוח Kalkir. פרויקטים ישנים נטענים במראה הניטרלי שלהם.'},
+ ru:{title:'Цветокоррекция материала',subtitle:'Jerusalem stone: по умолчанию −0.5 EV, температура −20, насыщенность 90%. Остальные коллекции нейтральны. Настройки раздельные для каждой зоны и модели.',ev:'Экспозиция',temperature:'Температура',saturation:'Насыщенность',reset:'Вернуть рекомендованный пресет',neutral:'Нейтрально · 0 EV',cool:'Холоднее',warm:'Теплее',note:'Это визуальный стартовый пресет, а не измерение цвета панелей Kalkir. Старые проекты сохраняют прежний нейтральный вид.'}
  };
  const neutral=()=>({ev:0,temperature:0,saturation:100});
+ const JERUSALEM_STONE=new Set(['yerushalmi','taltish','hebron','meshamshem','tuvza','kurkarit','marbel','tuvza_small','hirbe_a','hirbe_b']);
+ const recommended=()=>({ev:-0.5,temperature:-20,saturation:90});
+ const defaultFor=materialId=>JERUSALEM_STONE.has(materialId)?recommended():neutral();
+ const equal=(a,b)=>a.ev===b.ev&&a.temperature===b.temperature&&a.saturation===b.saturation;
  const settings={};let rev=0,ui=null,readouts={},inputs={},title=null,subtitle=null,note=null,resetButton=null;
  let lastMaterial=null,lastZone=null;
  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
  const linear=c=>{c=c/255;return c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4)};
  const gamma=c=>{c=clamp(c,0,1);return Math.round(255*(c<=.0031308?12.92*c:1.055*Math.pow(c,1/2.4)-.055))};
- function gradeRecord(zone,id){return settings[zone]?.[id]||neutral()}
+ function gradeRecord(zone,id){return settings[zone]?.[id]||defaultFor(id)}
  function valid(row){if(!row||typeof row!=='object')return neutral();
    let num=(x,d)=>typeof x==='number'&&Number.isFinite(x)?x:d;
    return {ev:clamp(num(row.ev,0),-2,2),temperature:clamp(num(row.temperature,0),-100,100),saturation:clamp(num(row.saturation,100),0,150)};}
@@ -659,7 +665,7 @@ start();
  function refreshPreview(){const m=id(),zone=key(),t=window.__smsTextureFidelity?.resolve(m);const image=document.getElementById('tfTileImg');if(!image)return;let c=resolve(t,zone,m);if(!c)return;try{image.src=c instanceof HTMLCanvasElement?c.toDataURL('image/png'):c.src}catch(e){console.warn(e)}}
  function change(field,value){const zone=key(),m=id();if(!m||!ZONES.includes(zone))return;
    settings[zone]??={};const next=valid({...gradeRecord(zone,m),[field]:Number(value)});
-   if(next.ev===0&&next.temperature===0&&next.saturation===100)delete settings[zone][m];else settings[zone][m]=next;
+   if(equal(next,defaultFor(m)))delete settings[zone][m];else settings[zone][m]=next;
    rev++;cache=[];sync();refreshPreview();scheduleDraw();}
  function sync(){if(!ui)return;const m=id(),zone=key();if(!m)return;
    const l=LABEL[state.lang]||LABEL.he;
@@ -670,12 +676,17 @@ start();
    for(const node of ui.querySelectorAll('[data-grade-text]'))node.textContent=l[node.dataset.gradeText];
    if(lastMaterial!==m||lastZone!==zone){lastMaterial=m;lastZone=zone;refreshPreview()}
  }
- function serialize(){return {version:1,zones:JSON.parse(JSON.stringify(settings))}}
+ function serialize(){return {version:2,zones:JSON.parse(JSON.stringify(settings))}}
  function restore(data){for(const z of Object.keys(settings))delete settings[z];
-   if(data?.version===1&&data.zones&&typeof data.zones==='object'){
+   // A v1 grade-less record meant NEUTRAL, not a Jerusalem-stone preset.
+   // Persist explicit neutral overrides on import so old saved projects look unchanged.
+   if(!data||data.version===1){
+     for(const zone of ZONES){settings[zone]??={};for(const m of JERUSALEM_STONE)settings[zone][m]=neutral();}
+   }
+   if((data?.version===1||data?.version===2)&&data.zones&&typeof data.zones==='object'){
      for(const zone of ZONES){const row=data.zones[zone];if(!row||typeof row!=='object')continue;
       for(const [m,g] of Object.entries(row)){if(typeof m!=='string'||!catalog.some(p=>p.id===m))continue;
-       const clean=valid(g);if(!settings[zone])settings[zone]={};settings[zone][m]=clean;
+       settings[zone]??={};settings[zone][m]=valid(g);
       }
      }
    }
@@ -685,7 +696,7 @@ start();
    const after=document.getElementById('smsTextureFidelity')||host.querySelector('.sms-current');
    ui=document.createElement('section');ui.id='smsMaterialGrade';ui.className='sms-material-grade';
    ui.innerHTML=`<h3 data-grade-text="title"></h3><p class="smg-note" data-grade-text="subtitle"></p>
-      <div class="smg-fields"></div><button type="button" class="smg-reset" data-grade-text="reset"></button><p class="smg-foot" data-grade-text="note"></p>`;
+      <div class="smg-fields"></div><div class="smg-actions"><button type="button" class="smg-reset" data-grade-text="reset"></button><button type="button" class="smg-neutral" data-grade-text="neutral"></button></div><p class="smg-foot" data-grade-text="note"></p>`;
    if(after)after.after(ui);else host.prepend(ui);
    const fields=ui.querySelector('.smg-fields');
    const configs=[['ev',-2,2,0.1],['temperature',-100,100,5],['saturation',0,150,5]];
@@ -694,6 +705,7 @@ start();
      slider.addEventListener('input',()=>change(field,slider.value));fields.append(row);inputs[field]=slider;readouts[field]=output;
    }
    ui.querySelector('.smg-reset').onclick=()=>{const z=key(),m=id();if(!m)return;if(settings[z])delete settings[z][m];rev++;cache=[];sync();refreshPreview();scheduleDraw()};
+   ui.querySelector('.smg-neutral').onclick=()=>{const z=key(),m=id();if(!m)return;settings[z]??={};settings[z][m]=neutral();rev++;cache=[];sync();refreshPreview();scheduleDraw()};
    const css=document.createElement('style');css.textContent=`
      .sms-material-grade{margin:14px 0 16px;padding:15px;border:1px solid #557083;border-radius:13px;background:#1a303f;color:#e4e9ed}
      .sms-material-grade h3{font-size:14px;margin:0 0 6px;font-weight:750;color:#f0cc8d}
@@ -703,9 +715,10 @@ start();
      .sms-material-grade .smg-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;font-size:13px}
      .sms-material-grade .smg-head output{font-weight:750;direction:ltr;font-variant-numeric:tabular-nums;color:#f0cc8d}
      .sms-material-grade input[type=range]{width:100%;accent-color:#f0cc8d;cursor:pointer}
-     .sms-material-grade .smg-reset{background:#263b49;border:1px solid #59778b;color:#edf2f5;padding:9px 14px;border-radius:8px;cursor:pointer;font-size:12px}
+     .sms-material-grade .smg-actions{display:flex;gap:7px;flex-wrap:wrap}
+     .sms-material-grade .smg-reset,.sms-material-grade .smg-neutral{background:#263b49;border:1px solid #59778b;color:#edf2f5;padding:9px 14px;border-radius:8px;cursor:pointer;font-size:12px}
    `;document.head.append(css);
-   sync();return true;
+   sync();refreshPreview();scheduleDraw();return true;
  }
  window.__smsMaterialGrade={resolve,serialize,restore,sync,get revision(){return rev},get:(zone,materialId)=>({...gradeRecord(zone,materialId)})};
  function boot(){if(document.querySelector('.sms-tabpane[data-pane="materials"]')&&window.__smsTextureFidelity&&window.__smsPerspective){build();return}requestAnimationFrame(boot)}
